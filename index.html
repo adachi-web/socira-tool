@@ -8,7 +8,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#F8F7F4;--sur:#FFF;--bd:#E5E3DC;--tx:#1A1A18;--mu:#7A7870;--ac:#1A1A18;--acl:#F0EEE8;--r:10px;--rl:14px}
 body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
-.hdr{background:var(--sur);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hdr{background:var(--sur);border-bottom:1px solid var(--bd);padding:14px 20px;position:sticky;top:0;z-index:100}
 .logo{font-size:16px;font-weight:700;letter-spacing:.04em}
 .logo span{color:var(--mu);font-weight:400}
 .wrap{max-width:680px;margin:0 auto;padding:20px}
@@ -37,10 +37,12 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 .btn:hover{opacity:.85}
 .btn:active{opacity:.7}
 .mg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.up-area{border:2px dashed var(--bd);border-radius:var(--rl);padding:2rem;text-align:center;cursor:pointer;color:var(--mu);transition:all .15s}
-.up-area:hover{border-color:var(--ac);color:var(--ac)}
-.prev{max-width:100%;border-radius:var(--r);margin-top:12px;display:none}
-.note{font-size:12px;color:var(--mu);text-align:center;margin-top:8px}
+.note{font-size:12px;color:var(--mu);text-align:center;margin-top:8px;line-height:1.6}
+.steps{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+.step{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--acl);border-radius:var(--r)}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--ac);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:13px;color:var(--tx);line-height:1.6}
+.step-text b{font-weight:600}
 @media(max-width:640px){.wrap{padding:12px}.mg{grid-template-columns:1fr}}
 </style>
 </head>
@@ -133,8 +135,8 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
       </div>
     </div>
 
-    <button class="btn" onclick="genBrief()">制作指示書＋絵コンテを生成する →</button>
-    <p class="note">Claude.aiのチャットで使用してください</p>
+    <button class="btn" onclick="genBrief()">3枚分の制作指示書＋絵コンテを生成する →</button>
+    <p class="note">ボタンを押すとプロンプトがコピーされます<br>Claude.aiのチャットに貼り付けてください</p>
   </div>
 
   <!-- 分析・改善 -->
@@ -142,45 +144,48 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
     <div class="card">
       <div class="ctit">アカウント情報</div>
       <div class="fld"><label>インスタ URL</label><input type="url" id="a-insta" placeholder="https://www.instagram.com/〇〇/"></div>
-      <div class="fld"><label>投稿テーマ</label><input type="text" id="a-theme" placeholder="例：初回無料訴求、世界観投稿"></div>
+      <div class="fld"><label>投稿テーマ（3枚の内容）</label><input type="text" id="a-theme" placeholder="例：感情訴求・価格訴求・世界観の3枚セット"></div>
     </div>
     <div class="card">
-      <div class="ctit">投稿データ（わからない欄は空欄でOK）</div>
+      <div class="ctit">3枚投稿した結果データ（わからない欄は空欄でOK）</div>
       <div class="mg">
-        <div class="fld"><label>リーチ数</label><input type="number" id="a-reach" placeholder="例：1200" inputmode="numeric"></div>
-        <div class="fld"><label>インプレッション</label><input type="number" id="a-imp" placeholder="例：1800" inputmode="numeric"></div>
-        <div class="fld"><label>いいね数</label><input type="number" id="a-like" placeholder="例：45" inputmode="numeric"></div>
-        <div class="fld"><label>保存数</label><input type="number" id="a-save" placeholder="例：12" inputmode="numeric"></div>
-        <div class="fld"><label>コメント数</label><input type="number" id="a-comment" placeholder="例：3" inputmode="numeric"></div>
-        <div class="fld"><label>プロフタップ数</label><input type="number" id="a-profile" placeholder="例：8" inputmode="numeric"></div>
+        <div class="fld"><label>リーチ数（合計）</label><input type="number" id="a-reach" placeholder="例：3600" inputmode="numeric"></div>
+        <div class="fld"><label>インプレッション（合計）</label><input type="number" id="a-imp" placeholder="例：5400" inputmode="numeric"></div>
+        <div class="fld"><label>いいね数（合計）</label><input type="number" id="a-like" placeholder="例：135" inputmode="numeric"></div>
+        <div class="fld"><label>保存数（合計）</label><input type="number" id="a-save" placeholder="例：36" inputmode="numeric"></div>
+        <div class="fld"><label>コメント数（合計）</label><input type="number" id="a-comment" placeholder="例：9" inputmode="numeric"></div>
+        <div class="fld"><label>プロフタップ数（合計）</label><input type="number" id="a-profile" placeholder="例：24" inputmode="numeric"></div>
         <div class="fld"><label>フォロワー数</label><input type="number" id="a-followers" placeholder="例：398" inputmode="numeric"></div>
       </div>
-      <div class="fld"><label>気づいたこと（任意）</label><textarea id="a-note" placeholder="例：コメントが少なかった、保存は多かったなど"></textarea></div>
+      <div class="fld"><label>3枚の中で一番反応が良かった投稿（任意）</label><input type="text" id="a-best" placeholder="例：1枚目の感情訴求が保存多かった"></div>
+      <div class="fld"><label>気づいたこと（任意）</label><textarea id="a-note" placeholder="例：3枚目だけコメントが来た、全体的に保存が多かったなど"></textarea></div>
     </div>
-    <button class="btn" onclick="genAnalysis()">分析・改善提案を出す →</button>
-    <p class="note">Claude.aiのチャットで使用してください</p>
+    <button class="btn" onclick="genAnalysis()">3枚セットの分析・改善提案を出す →</button>
+    <p class="note">ボタンを押すとプロンプトがコピーされます<br>Claude.aiのチャットに貼り付けてください</p>
   </div>
 
   <!-- 添削 -->
   <div id="p-review" class="panel">
     <div class="card">
-      <div class="ctit">制作した画像</div>
-      <div class="up-area" onclick="document.getElementById('rf').click()">
-        <div style="font-size:32px;margin-bottom:8px">📎</div>
-        <div style="font-size:14px;font-weight:500">タップして画像を選択</div>
-        <div style="font-size:12px;margin-top:4px">JPG / PNG / WebP</div>
+      <div class="ctit">添削の手順</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">下の「添削プロンプトをコピー」ボタンを押す</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><b>Claude.aiのチャット</b>を開いて<b>制作した画像3枚を貼り付ける</b></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">コピーしたプロンプトを貼り付けて送信する</div>
+        </div>
       </div>
-      <input type="file" id="rf" accept="image/*" style="display:none" onchange="prevImg(event)">
-      <img id="rp" class="prev" alt="プレビュー">
     </div>
+
     <div class="card">
-      <div class="ctit">何枚目の指示書で作りましたか？</div>
-      <div class="tags" id="r-sheet">
-        <span class="tag" data-v="1枚目">1枚目</span>
-        <span class="tag" data-v="2枚目">2枚目</span>
-        <span class="tag" data-v="3枚目">3枚目</span>
-      </div>
-      <div class="ctit" style="margin-top:14px">集客ゴール</div>
+      <div class="ctit">集客ゴール</div>
       <div class="tags" id="r-goal">
         <span class="tag" data-v="来店促進">来店促進</span>
         <span class="tag" data-v="予約獲得">予約獲得</span>
@@ -189,15 +194,16 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
         <span class="tag" data-v="問い合わせ獲得">問い合わせ獲得</span>
         <span class="tag" data-v="求人・採用">求人・採用</span>
       </div>
-      <div class="fld" style="margin-top:14px"><label>制作者からひとこと（任意）</label><textarea id="r-note" placeholder="「ここが難しかった」「これで合ってるか不安」など"></textarea></div>
+      <div class="fld" style="margin-top:14px"><label>制作者からひとこと（任意）</label><textarea id="r-note" placeholder="「1枚目のレイアウトが不安」「3枚のトーンが揃ってるか確認してほしい」など"></textarea></div>
     </div>
-    <button class="btn" onclick="genReview()">添削してもらう →</button>
-    <p class="note">Claude.aiのチャットで使用してください</p>
+
+    <button class="btn" onclick="genReview()">添削プロンプトをコピー →</button>
+    <p class="note">コピー後にClaude.aiで画像3枚と一緒に送信してください</p>
   </div>
 </div>
 
 <script>
-const S={bG:[],bGo:[],bT:[],rS:[],rGo:[]};
+const S={bG:[],bGo:[],bT:[],rGo:[]};
 
 function sw(n){
   const ns=['brief','analysis','review'];
@@ -215,7 +221,7 @@ function itags(id,arr,single){
   });
 }
 itags('b-genre',S.bG);itags('b-goal',S.bGo);itags('b-target',S.bT);
-itags('r-sheet',S.rS,true);itags('r-goal',S.rGo);
+itags('r-goal',S.rGo);
 
 function addTag(cId,iId,arr){
   const inp=document.getElementById(iId);
@@ -237,7 +243,7 @@ const v=id=>document.getElementById(id)?.value?.trim()||'';
 
 function copyText(text){
   navigator.clipboard.writeText(text).then(()=>{
-    alert('プロンプトをコピーしました！\nClaude.aiのチャットに貼り付けてください。');
+    alert('コピーしました！\nClaude.aiのチャットに貼り付けてください。');
   }).catch(()=>{
     prompt('以下をコピーしてClaude.aiに貼り付けてください：',text);
   });
@@ -247,65 +253,73 @@ function genBrief(){
   const hp=v('b-hp'),insta=v('b-insta');
   if(!hp&&!insta){alert('HPまたはインスタのURLを入力してください');return;}
   const genre=S.bG.join('・')||'未選択',goal=S.bGo.join('・')||'未選択',target=S.bT.join('・')||'未選択';
-  copyText(`【制作指示書＋絵コンテ 生成リクエスト】
+  copyText(`【3枚セット制作指示書＋絵コンテ 生成リクエスト】
 HP URL: ${hp||'なし'}
 インスタ URL: ${insta||'なし'}
 業種: ${genre} / 集客ゴール: ${goal} / ターゲット: ${target}
 フォーマット: 縦長4:5（インスタフィード）
+※インスタは常に1投稿3枚セットで制作します
 
-インスタURLがある場合は投稿済みテーマを分析し被らない切り口3つを選んでください。
-Gary Vaynerchuk・Eugene Schwartzの思想をベースに、制作スタッフが迷わず動ける指示書を3枚分作成し、各枚のSVG絵コンテ（縦長4:5・実際の投稿イメージを色・構図・テキスト配置まで再現）もセットで出力してください。
+インスタURLがある場合は投稿済みテーマを分析し被らない切り口を選んでください。
+Gary Vaynerchuk・Eugene Schwartzの思想をベースに、3枚セットで統一感を持たせながら各枚が独立してバズれる設計にしてください。
+
+【3枚の役割設計】
+1枚目：スクロールを止める「感情訴求」→ 見た人が「わかる」「自分ごと」と感じる
+2枚目：信頼を作る「証拠・実績訴求」→ 「本当に効果あるの？」という疑念を解消
+3枚目：背中を押す「行動訴求」→ 「今すぐ問い合わせ・来店」に誘導
 
 各枚に必ず含めること：
 ① なぜこれがバズるか（人間の感情・欲求・心理から説明。スタッフのマーケ力が上がる内容）
-② 絵コンテSVG（縦長4:5）
+② 絵コンテSVG（縦長4:5・色・構図・テキスト配置まで再現）
 ③ テキスト案（キャッチ15文字以内・サブ・CTA）
 ④ デザイン指定（色コード・フォント・レイアウト・余白）
 ⑤ キャプション（そのまま投稿できる日本語・ハッシュタグ付き）
 ⑥ 期待効果（心理的根拠含む）
-最後に【制作スタッフへの今日の学び】を必ず入れること。`);
+
+最後に以下を必ず入れること：
+【3枚セットの統一ルール】色・フォント・トーンの統一指示
+【制作スタッフへの今日の学び】今回使ったマーケ手法を1つ噛み砕いて解説`);
 }
 
 function genAnalysis(){
-  copyText(`【投稿分析・改善提案 リクエスト】
-アカウント: ${v('a-insta')||'未入力'} / テーマ: ${v('a-theme')||'未指定'}
+  copyText(`【3枚セット投稿 分析・改善提案 リクエスト】
+アカウント: ${v('a-insta')||'未入力'}
+3枚の内容: ${v('a-theme')||'未入力'}
+
+【投稿データ（3枚合計）】
 リーチ: ${v('a-reach')||'不明'} / インプレッション: ${v('a-imp')||'不明'}
 いいね: ${v('a-like')||'不明'} / 保存: ${v('a-save')||'不明'} / コメント: ${v('a-comment')||'不明'}
 プロフタップ: ${v('a-profile')||'不明'} / フォロワー: ${v('a-followers')||'不明'}
+一番反応が良かった投稿: ${v('a-best')||'不明'}
 気づいたこと: ${v('a-note')||'なし'}
 
-世界トップSNSマーケッター視点で分析・改善提案をしてください。
+世界トップSNSマーケッター視点で3枚セットとして分析・改善提案をしてください。
+
 出力：
 ① 総合評価（S/A/B/C/D）＋一言
 ② 数値の読み方（スタッフが理解できる言葉で）
-③ 良かった点（マーケ的根拠付き）
+③ 3枚の中で何が効いて何が効かなかったか
 ④ 改善点（優先順位順・具体的な修正方法）
-⑤ 次の投稿で必ずやること（3つだけ）
-⑥ 今日のマーケ学び`);
-}
-
-function prevImg(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{const img=document.getElementById('rp');img.src=ev.target.result;img.style.display='block';};
-  r.readAsDataURL(f);
+⑤ 次の3枚セットで必ずやること（3つだけ）
+⑥ 今日のマーケ学び（3枚セット投稿の法則）`);
 }
 
 function genReview(){
-  const img=document.getElementById('rp');
-  if(!img.src||img.style.display==='none'){alert('画像をアップロードしてください');return;}
-  copyText(`【制作物 添削リクエスト】
-対象指示書: ${S.rS[0]||'未選択'} / 集客ゴール: ${S.rGo.join('・')||'未選択'}
+  const goal=S.rGo.join('・')||'未選択';
+  copyText(`【3枚セット制作物 添削リクエスト】
+集客ゴール: ${goal}
 制作者コメント: ${v('r-note')||'なし'}
 
-（添付画像を確認して）世界トップマーケッター視点で添削してください。
+添付した画像3枚を3枚セットとして世界トップマーケッター視点で添削してください。
+
 出力：
-① 総合点（100点満点）＋一言評価
+① 3枚セット総合点（100点満点）＋一言評価
 ② バズる可能性（高・中・低）＋理由
-③ 良かった点（心理的根拠付き）
-④ 改善点（優先順位順・具体的指示）
-⑤ 修正後のキャッチコピー案
-⑥ スタッフへの今日の学び`);
+③ 3枚の統一感・流れの評価（スクロールしたときの導線）
+④ 各枚の良かった点（1枚目・2枚目・3枚目それぞれ）
+⑤ 各枚の改善点（「ここをこう直して」レベルの具体的指示）
+⑥ 修正後のキャッチコピー案（3枚分）
+⑦ スタッフへの今日の学び`);
 }
 </script>
 </body>
