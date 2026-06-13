@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SOCIRA — SNS運用ツール</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F8F7F4;--sur:#FFF;--bd:#E5E3DC;--tx:#1A1A18;--mu:#7A7870;--ac:#1A1A18;--acl:#F0EEE8;--r:10px;--rl:14px}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.hdr{background:var(--sur);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:16px;font-weight:700;letter-spacing:.04em}
+.logo span{color:var(--mu);font-weight:400}
+.lay{display:flex;min-height:calc(100vh - 53px)}
+.sb{width:240px;background:var(--sur);border-right:1px solid var(--bd);padding:16px;flex-shrink:0}
+.mn{flex:1;padding:20px;max-width:800px}
+.sb-ttl{font-size:11px;font-weight:600;color:var(--mu);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px}
+.sb-ttl:first-child{margin-top:0}
+.cl-list{list-style:none}
+.cl-item{padding:10px 12px;border-radius:var(--r);cursor:pointer;font-size:14px;display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.cl-item:hover{background:var(--acl)}
+.cl-item.on{background:var(--ac);color:#fff}
+.cl-dot{width:8px;height:8px;border-radius:50%;background:var(--bd);flex-shrink:0}
+.cl-item.on .cl-dot{background:#fff;opacity:.5}
+.add-btn{width:100%;padding:10px;border:1px dashed var(--bd);border-radius:var(--r);background:none;color:var(--mu);font-size:13px;cursor:pointer;margin-top:8px;text-align:left;display:flex;align-items:center;gap:6px}
+.add-btn:hover{border-color:var(--ac);color:var(--ac)}
+.tabs{display:flex;gap:3px;background:var(--acl);padding:4px;border-radius:var(--rl);margin-bottom:18px;overflow-x:auto}
+.tab{flex:1;padding:9px 5px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;border-radius:8px;color:var(--mu);border:none;background:none;white-space:nowrap;min-width:54px}
+.tab.on{background:var(--sur);color:var(--tx)}
+.panel{display:none}.panel.on{display:block}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:13px;font-weight:500;color:var(--mu);margin-bottom:5px}
+.fld input,.fld textarea{width:100%;padding:11px 13px;border:1px solid var(--bd);border-radius:var(--r);font-size:15px;background:var(--sur);color:var(--tx);outline:none;transition:border-color .15s}
+.fld input:focus,.fld textarea:focus{border-color:var(--ac)}
+.fld textarea{resize:vertical;min-height:70px}
+.fld .hint{font-size:12px;color:var(--mu);margin-top:4px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px}
+.tag{font-size:13px;padding:7px 13px;border-radius:99px;border:1px solid var(--bd);color:var(--tx);cursor:pointer;background:var(--sur);transition:all .15s;user-select:none}
+.tag:hover{border-color:var(--ac)}
+.tag.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.btn{width:100%;padding:14px;font-size:15px;font-weight:600;cursor:pointer;background:var(--ac);color:#fff;border:none;border-radius:var(--rl);margin-top:14px;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.card{background:var(--sur);border:1px solid var(--bd);border-radius:var(--rl);padding:15px;margin-bottom:11px}
+.ctit{font-size:11px;font-weight:600;color:var(--mu);margin-bottom:11px;letter-spacing:.06em;text-transform:uppercase}
+.mg{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.cl-hdr{background:var(--sur);border:1px solid var(--bd);border-radius:var(--rl);padding:13px 15px;margin-bottom:15px;display:flex;align-items:center;gap:11px}
+.av{width:40px;height:40px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.cl-nm{font-size:16px;font-weight:600}
+.cl-mt{font-size:13px;color:var(--mu);margin-top:2px}
+.up-area{border:2px dashed var(--bd);border-radius:var(--rl);padding:2rem;text-align:center;cursor:pointer;color:var(--mu);transition:all .15s}
+.up-area:hover{border-color:var(--ac);color:var(--ac)}
+.prev{max-width:100%;border-radius:var(--r);margin-top:11px;display:none}
+/* 履歴 */
+.h-list{display:flex;flex-direction:column;gap:8px}
+.h-item{background:var(--sur);border:1px solid var(--bd);border-radius:var(--rl);padding:13px 15px;cursor:pointer;transition:border-color .15s;display:flex;align-items:center;gap:11px}
+.h-item:hover{border-color:var(--ac)}
+.h-thumb{width:44px;height:55px;border-radius:6px;background:var(--acl);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px}
+.h-thumb img{width:100%;height:100%;object-fit:cover}
+.h-type{font-size:11px;font-weight:600;color:var(--mu);letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px}
+.h-title{font-size:14px;font-weight:500}
+.h-date{font-size:12px;color:var(--mu);margin-top:2px}
+.h-empty{text-align:center;padding:40px 20px;color:var(--mu);font-size:14px;line-height:1.8}
+/* モーダル */
+.mb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center}
+.mb.on{display:flex}
+.md{background:var(--sur);border-radius:20px 20px 0 0;padding:22px;width:100%;max-width:680px;max-height:85vh;overflow-y:auto}
+.md-hnd{width:40px;height:4px;background:var(--bd);border-radius:99px;margin:0 auto 14px}
+.md h3{font-size:17px;font-weight:600;margin-bottom:3px}
+.md-dt{font-size:13px;color:var(--mu);margin-bottom:14px}
+.md-tp{font-size:11px;font-weight:600;color:var(--mu);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.md-pr{background:var(--bg);border-radius:var(--r);padding:13px;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow-y:auto;margin-bottom:11px}
+.md-img{max-width:100%;border-radius:var(--r);margin-bottom:14px}
+.md-ac{display:flex;gap:8px;margin-top:4px}
+.btn-cl{flex:1;padding:12px;border:1px solid var(--bd);border-radius:var(--r);background:none;color:var(--tx);font-size:14px;cursor:pointer}
+.btn-cp{flex:1;padding:12px;border:none;border-radius:var(--r);background:var(--ac);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+/* 追加モーダル */
+.amb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;align-items:center;justify-content:center;padding:20px}
+.amb.on{display:flex}
+.amd{background:var(--sur);border-radius:var(--rl);padding:22px;width:100%;max-width:400px}
+.amd h3{font-size:17px;font-weight:600;margin-bottom:14px}
+.amd-ac{display:flex;gap:8px;margin-top:14px}
+.btn-cn{flex:1;padding:12px;border:1px solid var(--bd);border-radius:var(--r);background:none;color:var(--tx);font-size:14px;cursor:pointer}
+.btn-ok{flex:1;padding:12px;border:none;border-radius:var(--r);background:var(--ac);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.empty{text-align:center;padding:60px 20px;color:var(--mu)}
+.ei{font-size:40px;margin-bottom:11px}
+.empty h3{font-size:16px;font-weight:600;color:var(--tx);margin-bottom:5px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ac);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:500;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1}
+@media(max-width:640px){
+  .sb{display:none}
+  .mn{padding:12px}
+  .mg{grid-template-columns:1fr}
+  .mbar{display:flex;align-items:center;gap:6px;padding:10px 12px;background:var(--sur);border-bottom:1px solid var(--bd);overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .mc-btn{padding:7px 13px;border-radius:99px;border:1px solid var(--bd);font-size:13px;white-space:nowrap;cursor:pointer;background:none;color:var(--tx);flex-shrink:0}
+  .mc-btn.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+  .mc-add{padding:7px 13px;border-radius:99px;border:1px dashed var(--bd);font-size:13px;white-space:nowrap;cursor:pointer;background:none;color:var(--mu);flex-shrink:0}
+  .mb{align-items:flex-end}
+}
+@media(min-width:641px){
+  .mbar{display:none}
+  .mb{align-items:center;padding:20px}
+  .md{border-radius:var(--rl);max-height:80vh}
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="logo">SOCIRA <span>SNS運用ツール</span></div>
+  <div style="font-size:12px;color:var(--mu)" id="hc"></div>
+</header>
+<div class="mbar" id="mbar"></div>
+<div class="lay">
+  <aside class="sb">
+    <div class="sb-ttl">顧客フォルダ</div>
+    <ul class="cl-list" id="cl-list"></ul>
+    <button class="add-btn" onclick="openAM()">＋ 新しい顧客を追加</button>
+  </aside>
+  <main class="mn">
+    <div class="empty" id="emp">
+      <div class="ei">📁</div>
+      <h3>顧客フォルダを選択してください</h3>
+      <p>サイドバーから顧客を選ぶか<br>新しい顧客を追加してください</p>
+    </div>
+    <div id="tc" style="display:none">
+      <div class="cl-hdr" id="cl-hdr"></div>
+      <div class="tabs">
+        <button class="tab on" onclick="sw('brief')">📋 指示書</button>
+        <button class="tab" onclick="sw('hashtag')">#️⃣ タグ</button>
+        <button class="tab" onclick="sw('analysis')">📊 分析</button>
+        <button class="tab" onclick="sw('review')">✅ 添削</button>
+        <button class="tab" onclick="sw('history')">🗂 履歴</button>
+      </div>
+
+      <!-- 制作指示書 -->
+      <div id="p-brief" class="panel on">
+        <div class="card">
+          <div class="ctit">基本情報</div>
+          <div class="fld"><label>HP URL</label><input type="url" id="b-hp" placeholder="https://example.com" inputmode="url"></div>
+          <div class="fld"><label>インスタ URL</label><input type="url" id="b-insta" placeholder="https://www.instagram.com/〇〇/" inputmode="url"><div class="hint">入力すると投稿済みテーマを分析して被らない切り口を優先提案します</div></div>
+        </div>
+        <div class="card"><div class="ctit">業種</div>
+          <div class="tags" id="b-genre">
+            <span class="tag" data-v="飲食店">飲食店</span><span class="tag" data-v="カフェ">カフェ</span><span class="tag" data-v="美容サロン">美容サロン</span><span class="tag" data-v="エステ">エステ</span><span class="tag" data-v="整体・治療院">整体・治療院</span><span class="tag" data-v="防犯カメラ">防犯カメラ</span><span class="tag" data-v="ガールズバー">ガールズバー</span><span class="tag" data-v="小売店">小売店</span><span class="tag" data-v="不動産">不動産</span><span class="tag" data-v="士業">士業</span><span class="tag" data-v="建設・工務店">建設・工務店</span><span class="tag" data-v="その他">その他</span>
+          </div>
+        </div>
+        <div class="card"><div class="ctit">集客ゴール</div>
+          <div class="tags" id="b-goal">
+            <span class="tag" data-v="来店促進">来店促進</span><span class="tag" data-v="予約獲得">予約獲得</span><span class="tag" data-v="ブランド認知">ブランド認知</span><span class="tag" data-v="フォロワー増加">フォロワー増加</span><span class="tag" data-v="商品購入">商品購入</span><span class="tag" data-v="問い合わせ獲得">問い合わせ獲得</span>
+          </div>
+        </div>
+        <div class="card"><div class="ctit">ターゲット</div>
+          <div class="tags" id="b-target">
+            <span class="tag" data-v="10〜20代女性">10〜20代女性</span><span class="tag" data-v="30〜40代女性">30〜40代女性</span><span class="tag" data-v="20〜30代男性">20〜30代男性</span><span class="tag" data-v="40〜50代男性">40〜50代男性</span><span class="tag" data-v="ファミリー">ファミリー</span><span class="tag" data-v="シニア">シニア</span><span class="tag" data-v="ビジネスパーソン">ビジネスパーソン</span>
+          </div>
+        </div>
+        <button class="btn" onclick="genBrief()">制作指示書＋絵コンテを生成する →</button>
+      </div>
+
+      <!-- ハッシュタグ -->
+      <div id="p-hashtag" class="panel">
+        <div class="card"><div class="ctit">業種</div>
+          <div class="tags" id="h-genre">
+            <span class="tag" data-v="飲食店">飲食店</span><span class="tag" data-v="カフェ">カフェ</span><span class="tag" data-v="美容サロン">美容サロン</span><span class="tag" data-v="エステ">エステ</span><span class="tag" data-v="ガールズバー">ガールズバー</span><span class="tag" data-v="防犯カメラ">防犯カメラ</span><span class="tag" data-v="小売店">小売店</span><span class="tag" data-v="その他">その他</span>
+          </div>
+        </div>
+        <div class="card"><div class="ctit">詳細設定</div>
+          <div class="fld"><label>エリア（任意）</label><input type="text" id="h-area" placeholder="例：福岡天神、渋谷"></div>
+          <div class="fld"><label>投稿テーマ（任意）</label><input type="text" id="h-theme" placeholder="例：初回無料キャンペーン"></div>
+          <div class="ctit" style="margin-top:11px">ターゲット</div>
+          <div class="tags" id="h-target">
+            <span class="tag" data-v="10〜20代女性">10〜20代女性</span><span class="tag" data-v="30〜40代女性">30〜40代女性</span><span class="tag" data-v="20〜30代男性">20〜30代男性</span><span class="tag" data-v="40〜50代男性">40〜50代男性</span><span class="tag" data-v="ファミリー">ファミリー</span><span class="tag" data-v="ビジネスパーソン">ビジネスパーソン</span>
+          </div>
+        </div>
+        <button class="btn" onclick="genHash()">ハッシュタグ戦略を生成する →</button>
+      </div>
+
+      <!-- 分析 -->
+      <div id="p-analysis" class="panel">
+        <div class="card"><div class="ctit">アカウント情報</div>
+          <div class="fld"><label>インスタ URL</label><input type="url" id="a-insta" placeholder="https://www.instagram.com/〇〇/"></div>
+          <div class="fld"><label>投稿テーマ</label><input type="text" id="a-theme" placeholder="例：初回無料訴求"></div>
+        </div>
+        <div class="card"><div class="ctit">投稿データ（わからない欄は空欄でOK）</div>
+          <div class="mg">
+            <div class="fld"><label>リーチ数</label><input type="number" id="a-reach" placeholder="例：1200" inputmode="numeric"></div>
+            <div class="fld"><label>インプレッション</label><input type="number" id="a-imp" placeholder="例：1800" inputmode="numeric"></div>
+            <div class="fld"><label>いいね数</label><input type="number" id="a-like" placeholder="例：45" inputmode="numeric"></div>
+            <div class="fld"><label>保存数</label><input type="number" id="a-save" placeholder="例：12" inputmode="numeric"></div>
+            <div class="fld"><label>コメント数</label><input type="number" id="a-comment" placeholder="例：3" inputmode="numeric"></div>
+            <div class="fld"><label>プロフタップ数</label><input type="number" id="a-profile" placeholder="例：8" inputmode="numeric"></div>
+            <div class="fld"><label>フォロワー数</label><input type="number" id="a-followers" placeholder="例：398" inputmode="numeric"></div>
+          </div>
+          <div class="fld"><label>気づいたこと（任意）</label><textarea id="a-note" placeholder="例：コメントが少なかった、保存は多かったなど"></textarea></div>
+        </div>
+        <button class="btn" onclick="genAnalysis()">分析・改善提案を出す →</button>
+      </div>
+
+      <!-- 添削 -->
+      <div id="p-review" class="panel">
+        <div class="card"><div class="ctit">制作した画像</div>
+          <div class="up-area" onclick="document.getElementById('rf').click()">
+            <div style="font-size:30px;margin-bottom:7px">📎</div>
+            <div style="font-size:14px;font-weight:500">タップして画像を選択</div>
+            <div style="font-size:12px;margin-top:3px">JPG / PNG / WebP</div>
+          </div>
+          <input type="file" id="rf" accept="image/*" style="display:none" onchange="prevImg(event)">
+          <img id="rp" class="prev" alt="プレビュー">
+        </div>
+        <div class="card">
+          <div class="ctit">何枚目の指示書で作りましたか？</div>
+          <div class="tags" id="r-sheet"><span class="tag" data-v="1枚目">1枚目</span><span class="tag" data-v="2枚目">2枚目</span><span class="tag" data-v="3枚目">3枚目</span></div>
+          <div class="ctit" style="margin-top:12px">集客ゴール</div>
+          <div class="tags" id="r-goal"><span class="tag" data-v="来店促進">来店促進</span><span class="tag" data-v="予約獲得">予約獲得</span><span class="tag" data-v="ブランド認知">ブランド認知</span><span class="tag" data-v="フォロワー増加">フォロワー増加</span><span class="tag" data-v="問い合わせ獲得">問い合わせ獲得</span></div>
+          <div class="fld" style="margin-top:13px"><label>制作者からひとこと（任意）</label><textarea id="r-note" placeholder="「ここが難しかった」「合ってるか不安」など"></textarea></div>
+        </div>
+        <button class="btn" onclick="genReview()">添削してもらう →</button>
+      </div>
+
+      <!-- 履歴 -->
+      <div id="p-history" class="panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-size:13px;color:var(--mu)" id="h-count"></div>
+          <button id="h-clear" onclick="clearHist()" style="font-size:12px;color:var(--mu);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;display:none">全削除</button>
+        </div>
+        <div class="h-list" id="h-list"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 履歴詳細モーダル -->
+<div class="mb" id="dm">
+  <div class="md">
+    <div class="md-hnd"></div>
+    <div class="md-tp" id="dm-type"></div>
+    <h3 id="dm-title"></h3>
+    <div class="md-dt" id="dm-date"></div>
+    <img id="dm-img" class="md-img" style="display:none" alt="">
+    <div class="md-pr" id="dm-pr"></div>
+    <div class="md-ac">
+      <button class="btn-cl" onclick="closeDM()">閉じる</button>
+      <button class="btn-cp" onclick="copyDM()">プロンプトをコピー</button>
+    </div>
+  </div>
+</div>
+
+<!-- 顧客追加モーダル -->
+<div class="amb" id="am">
+  <div class="amd">
+    <h3>新しい顧客を追加</h3>
+    <div class="fld"><label>顧客名・店舗名</label><input type="text" id="an" placeholder="例：海酒、防犯カメラドットjp"></div>
+    <div class="fld"><label>業種（任意）</label><input type="text" id="ag" placeholder="例：ガールズバー、飲食店"></div>
+    <div class="fld"><label>メモ（任意）</label><input type="text" id="am2" placeholder="例：福岡天神・来店促進がメイン"></div>
+    <div class="amd-ac">
+      <button class="btn-cn" onclick="closeAM()">キャンセル</button>
+      <button class="btn-ok" onclick="addCl()">追加する</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const S={bG:[],bGo:[],bT:[],hG:[],hT:[],rS:[],rGo:[]};
+let clients=JSON.parse(localStorage.getItem('sc_cl')||'[]');
+let cur=null,curPr='';
+
+const LB={brief:'📋 制作指示書',hashtag:'#️⃣ ハッシュタグ',analysis:'📊 分析・改善',review:'✅ 添削'};
+const IC={brief:'📋',hashtag:'#️⃣',analysis:'📊',review:'✅'};
+
+function save(){localStorage.setItem('sc_cl',JSON.stringify(clients));}
+
+function renderCl(){
+  const l=document.getElementById('cl-list'),mb=document.getElementById('mbar');
+  l.innerHTML='';mb.innerHTML='';
+  clients.forEach((c,i)=>{
+    const li=document.createElement('li');
+    li.className='cl-item'+(cur===i?' on':'');
+    li.innerHTML=`<span class="cl-dot"></span>${c.name}`;
+    li.onclick=()=>selCl(i);l.appendChild(li);
+    const b=document.createElement('button');
+    b.className='mc-btn'+(cur===i?' on':'');
+    b.textContent=c.name;b.onclick=()=>selCl(i);mb.appendChild(b);
+  });
+  const ab=document.createElement('button');
+  ab.className='mc-add';ab.textContent='＋ 追加';ab.onclick=openAM;mb.appendChild(ab);
+}
+
+function selCl(i){
+  cur=i;const c=clients[i];
+  document.getElementById('emp').style.display='none';
+  document.getElementById('tc').style.display='block';
+  document.getElementById('cl-hdr').innerHTML=`<div class="av">${c.name.slice(0,2)}</div><div><div class="cl-nm">${c.name}</div><div class="cl-mt">${c.genre||''}${c.memo?' · '+c.memo:''}</div></div>`;
+  document.getElementById('hc').textContent=c.name;
+  if(c.hp)document.getElementById('b-hp').value=c.hp;
+  if(c.insta)document.getElementById('b-insta').value=c.insta;
+  renderCl();renderHist();
+}
+
+function openAM(){document.getElementById('am').classList.add('on');document.getElementById('an').focus();}
+function closeAM(){document.getElementById('am').classList.remove('on');['an','ag','am2'].forEach(id=>document.getElementById(id).value='');}
+
+function addCl(){
+  const name=document.getElementById('an').value.trim();
+  if(!name){alert('顧客名を入力してください');return;}
+  clients.push({name,genre:document.getElementById('ag').value.trim(),memo:document.getElementById('am2').value.trim(),hp:'',insta:'',history:[]});
+  save();closeAM();renderCl();selCl(clients.length-1);
+  toast(`「${name}」を追加しました`);
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2500);
+}
+
+function sw(n){
+  const ns=['brief','hashtag','analysis','review','history'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',ns[i]===n));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-'+n).classList.add('on');
+  if(n==='history')renderHist();
+}
+
+function itags(id,arr,single){
+  document.querySelectorAll(`#${id} .tag`).forEach(t=>t.onclick=()=>{
+    if(single){document.querySelectorAll(`#${id} .tag`).forEach(x=>x.classList.remove('on'));arr.length=0;}
+    const i=arr.indexOf(t.dataset.v);
+    if(i>-1){arr.splice(i,1);t.classList.remove('on');}
+    else{arr.push(t.dataset.v);t.classList.add('on');}
+  });
+}
+itags('b-genre',S.bG);itags('b-goal',S.bGo);itags('b-target',S.bT);
+itags('h-genre',S.hG);itags('h-target',S.hT);
+itags('r-sheet',S.rS,true);itags('r-goal',S.rGo);
+
+const v=id=>document.getElementById(id)?.value?.trim()||'';
+const cl=()=>cur!==null?clients[cur]:{name:'',history:[]};
+
+function saveHist(type,title,prompt,img){
+  if(cur===null)return;
+  if(!clients[cur].history)clients[cur].history=[];
+  clients[cur].history.unshift({
+    id:Date.now(),type,title,prompt,
+    img:img||null,
+    date:new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})
+  });
+  save();
+}
+
+function renderHist(){
+  if(cur===null)return;
+  const h=clients[cur].history||[];
+  const list=document.getElementById('h-list');
+  const cnt=document.getElementById('h-count');
+  const clrBtn=document.getElementById('h-clear');
+  cnt.textContent=`${h.length}件の履歴`;
+  clrBtn.style.display=h.length>0?'block':'none';
+  if(h.length===0){list.innerHTML='<div class="h-empty">まだ履歴がありません<br>各機能を使うと自動で保存されます</div>';return;}
+  list.innerHTML='';
+  h.forEach(item=>{
+    const el=document.createElement('div');
+    el.className='h-item';
+    const thumb=item.img?`<div class="h-thumb"><img src="${item.img}" alt=""></div>`:`<div class="h-thumb">${IC[item.type]||'📄'}</div>`;
+    el.innerHTML=`${thumb}<div><div class="h-type">${LB[item.type]||item.type}</div><div class="h-title">${item.title}</div><div class="h-date">${item.date}</div></div>`;
+    el.onclick=()=>openDM(item);
+    list.appendChild(el);
+  });
+}
+
+function openDM(item){
+  document.getElementById('dm-type').textContent=LB[item.type]||item.type;
+  document.getElementById('dm-title').textContent=item.title;
+  document.getElementById('dm-date').textContent=item.date;
+  document.getElementById('dm-pr').textContent=item.prompt;
+  const img=document.getElementById('dm-img');
+  if(item.img){img.src=item.img;img.style.display='block';}else{img.style.display='none';}
+  curPr=item.prompt;
+  document.getElementById('dm').classList.add('on');
+}
+function closeDM(){document.getElementById('dm').classList.remove('on');}
+function copyDM(){navigator.clipboard.writeText(curPr).then(()=>toast('プロンプトをコピーしました'));}
+
+function clearHist(){
+  if(!confirm('この顧客の履歴をすべて削除しますか？'))return;
+  clients[cur].history=[];save();renderHist();toast('履歴を削除しました');
+}
+
+function saveUrls(){
+  if(cur===null)return;
+  clients[cur].hp=v('b-hp');clients[cur].insta=v('b-insta');save();
+}
+
+function copyAndSave(type,title,prompt,img){
+  navigator.clipboard.writeText(prompt).then(()=>{
+    saveHist(type,title,prompt,img||null);
+    renderHist();
+    toast('コピーしました！ChatGPTに貼り付けてください');
+  });
+}
+
+function genBrief(){
+  saveUrls();
+  const hp=v('b-hp'),insta=v('b-insta');
+  if(!hp&&!insta){alert('HPまたはインスタのURLを入力してください');return;}
+  const genre=S.bG.join('・')||'未選択',goal=S.bGo.join('・')||'未選択',target=S.bT.join('・')||'未選択';
+  const title=`${genre} / ${goal} / ${target}`;
+  const prompt=`【制作指示書＋絵コンテ 生成リクエスト】
+顧客名: ${cl().name}
+HP URL: ${hp||'なし'}
+インスタ URL: ${insta||'なし'}
+業種: ${genre} / 集客ゴール: ${goal} / ターゲット: ${target}
+フォーマット: 縦長4:5（インスタフィード）
+
+インスタURLがある場合は投稿済みテーマを分析し被らない切り口3つを選んでください。
+Gary Vaynerchuk・Eugene Schwartzの思想をベースに、制作スタッフが迷わず動ける指示書を3枚分作成し、各枚のSVG絵コンテ（縦長4:5・実際の投稿イメージを色・構図・テキスト配置まで再現）もセットで出力してください。
+
+各枚に必ず含めること：
+① なぜこれがバズるか（人間の感情・欲求・心理から説明）
+② 絵コンテSVG（縦長4:5）
+③ テキスト案（キャッチ15文字以内・サブ・CTA）
+④ デザイン指定（色コード・フォント・レイアウト・余白）
+⑤ キャプション（そのまま投稿できる日本語・ハッシュタグ付き）
+⑥ 期待効果（心理的根拠含む）
+最後に【制作スタッフへの今日の学び】を必ず入れること。`;
+  copyAndSave('brief',title,prompt,null);
+}
+
+function genHash(){
+  const genre=S.hG.join('・')||'未選択',target=S.hT.join('・')||'未選択';
+  const theme=v('h-theme')||'未指定';
+  const title=`${genre} / ${v('h-area')||'エリア未指定'} / ${theme}`;
+  const prompt=`【ハッシュタグ戦略 生成リクエスト】
+顧客名: ${cl().name}
+業種: ${genre} / エリア: ${v('h-area')||'未指定'} / ターゲット: ${target}
+投稿テーマ: ${theme}
+
+世界トップSNSマーケッター視点でインスタアルゴリズムを最大活用するハッシュタグ戦略を作成してください。
+出力：①戦略の考え方 ②大タグ（3〜5個）③中タグ（8〜10個）④小タグ（5〜7個）⑤エリアタグ ⑥コピペ用一覧3パターン ⑦絶対やってはいけないこと`;
+  copyAndSave('hashtag',title,prompt,null);
+}
+
+function genAnalysis(){
+  const theme=v('a-theme')||'未指定';
+  const title=`${theme} / いいね:${v('a-like')||'?'} 保存:${v('a-save')||'?'}`;
+  const prompt=`【投稿分析・改善提案 リクエスト】
+顧客名: ${cl().name}
+アカウント: ${v('a-insta')||'未入力'} / テーマ: ${theme}
+リーチ: ${v('a-reach')||'不明'} / インプレッション: ${v('a-imp')||'不明'}
+いいね: ${v('a-like')||'不明'} / 保存: ${v('a-save')||'不明'} / コメント: ${v('a-comment')||'不明'}
+プロフタップ: ${v('a-profile')||'不明'} / フォロワー: ${v('a-followers')||'不明'}
+コメント: ${v('a-note')||'なし'}
+
+世界トップSNSマーケッター視点で分析・改善提案をしてください。
+出力：①総合評価（S/A/B/C/D）②数値の読み方 ③良かった点 ④改善点（優先順位順） ⑤次の投稿で必ずやること3つ ⑥今日のマーケ学び`;
+  copyAndSave('analysis',title,prompt,null);
+}
+
+function prevImg(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=document.getElementById('rp');
+    img.src=ev.target.result;img.style.display='block';
+    img.dataset.b64=ev.target.result;
+  };
+  r.readAsDataURL(f);
+}
+
+function genReview(){
+  const img=document.getElementById('rp');
+  if(!img.src||img.style.display==='none'){alert('画像をアップロードしてください');return;}
+  const sheet=S.rS[0]||'未選択',goal=S.rGo.join('・')||'未選択';
+  const title=`${sheet} / ${goal}`;
+  const imgData=img.dataset.b64||null;
+  const prompt=`【制作物 添削リクエスト】
+顧客名: ${cl().name}
+対象指示書: ${sheet} / 集客ゴール: ${goal}
+制作者コメント: ${v('r-note')||'なし'}
+
+（画像を添付して）世界トップマーケッター視点で添削してください。
+出力：①総合点（100点満点）②バズる可能性（高・中・低）③良かった点 ④改善点（具体的指示）⑤修正後のキャッチコピー案 ⑥スタッフへの今日の学び`;
+  copyAndSave('review',title,prompt,imgData);
+}
+
+document.getElementById('dm').addEventListener('click',function(e){if(e.target===this)closeDM();});
+document.getElementById('am').addEventListener('click',function(e){if(e.target===this)closeAM();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDM();closeAM();}});
+document.getElementById('an').addEventListener('keydown',e=>{if(e.key==='Enter')addCl();});
+
+renderCl();
+</script>
+</body>
+</html>
