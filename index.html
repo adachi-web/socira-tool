@@ -3,372 +3,743 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SOCIRA — SNS運用ツール</title>
+<title>LightVision — LED看板・デジタルサイネージ専門</title>
+<meta name="description" content="LED看板・デジタルサイネージの企画・デザイン・製作・施工・保守までワンストップ対応。夜でも目立つ、変えられる看板をご提案します。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#F8F7F4;--sur:#FFF;--bd:#E5E3DC;--tx:#1A1A18;--mu:#7A7870;--ac:#1A1A18;--acl:#F0EEE8;--r:10px;--rl:14px}
-body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
-.hdr{background:var(--sur);border-bottom:1px solid var(--bd);padding:14px 20px;position:sticky;top:0;z-index:100}
-.logo{font-size:16px;font-weight:700;letter-spacing:.04em}
-.logo span{color:var(--mu);font-weight:400}
-.wrap{max-width:680px;margin:0 auto;padding:20px}
-.tabs{display:flex;gap:3px;background:var(--acl);padding:4px;border-radius:var(--rl);margin-bottom:1.25rem}
-.tab{flex:1;padding:10px 6px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;border-radius:var(--r);color:var(--mu);border:none;background:none;white-space:nowrap}
-.tab.on{background:var(--sur);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.07)}
-.panel{display:none}.panel.on{display:block}
-.card{background:var(--sur);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px}
-.ctit{font-size:11px;font-weight:600;color:var(--mu);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase}
-.fld{margin-bottom:13px}
-.fld label{display:block;font-size:13px;font-weight:500;color:var(--mu);margin-bottom:5px}
-.fld input,.fld textarea{width:100%;padding:11px 13px;border:1px solid var(--bd);border-radius:var(--r);font-size:15px;background:var(--sur);color:var(--tx);outline:none;transition:border-color .15s}
-.fld input:focus,.fld textarea:focus{border-color:var(--ac)}
-.fld textarea{resize:vertical;min-height:70px}
-.fld .hint{font-size:12px;color:var(--mu);margin-top:4px}
-.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
-.tag{font-size:13px;padding:7px 13px;border-radius:99px;border:1px solid var(--bd);color:var(--tx);cursor:pointer;background:var(--sur);transition:all .15s;user-select:none}
-.tag:hover{border-color:var(--ac)}
-.tag.on{background:var(--ac);color:#fff;border-color:var(--ac)}
-.custom-row{display:flex;gap:6px;margin-top:4px}
-.custom-row input{flex:1;padding:8px 12px;border:1px solid var(--bd);border-radius:var(--r);font-size:13px;background:var(--sur);color:var(--tx);outline:none}
-.custom-row input:focus{border-color:var(--ac)}
-.custom-row button{padding:8px 14px;border-radius:var(--r);border:1px solid var(--bd);background:none;color:var(--mu);font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.custom-row button:hover{border-color:var(--ac);color:var(--ac)}
-.btn{width:100%;padding:14px;font-size:15px;font-weight:600;cursor:pointer;background:var(--ac);color:#fff;border:none;border-radius:var(--rl);margin-top:14px;letter-spacing:.02em;transition:opacity .15s}
-.btn:hover{opacity:.85}
-.btn:active{opacity:.7}
-.mg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.note{font-size:12px;color:var(--mu);text-align:center;margin-top:8px;line-height:1.6}
-.steps{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
-.step{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--acl);border-radius:var(--r)}
-.step-num{width:24px;height:24px;border-radius:50%;background:var(--ac);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.step-text{font-size:13px;color:var(--tx);line-height:1.6}
-.step-text b{font-weight:600}
-@media(max-width:640px){.wrap{padding:12px}.mg{grid-template-columns:1fr}}
+:root{
+  --bg:#06080f;
+  --bg2:#0b0f1c;
+  --surface:#0f1524;
+  --surface2:#131a2c;
+  --border:#22293c;
+  --text:#eef1f8;
+  --muted:#8e97ab;
+  --accent:#2af0c4;
+  --accent2:#ff3d9a;
+  --accent-dim:rgba(42,240,196,.12);
+  --glow:0 0 24px rgba(42,240,196,.45);
+  --r:14px;
+  --rl:20px;
+  --maxw:1160px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans JP',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  line-height:1.75;
+  overflow-x:hidden;
+}
+.disp{font-family:'Rajdhani','Noto Sans JP',sans-serif;font-weight:700;letter-spacing:.02em}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+section{position:relative}
+
+/* background pixel grid accent */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(42,240,196,.08), transparent 40%),
+    radial-gradient(circle at 85% 0%, rgba(255,61,154,.07), transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(42,240,196,.05), transparent 40%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ---------- Header ---------- */
+header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(6,8,15,.82);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:var(--glow);animation:blink 2.2s ease-in-out infinite}
+.brand small{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.18em}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+nav.links{display:flex;gap:32px;align-items:center}
+nav.links a{font-size:14px;color:var(--muted);font-weight:500;transition:color .15s}
+nav.links a:hover{color:var(--text)}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--accent);color:#04140f;
+  padding:11px 22px;border-radius:999px;font-weight:700;font-size:14px;
+  box-shadow:0 0 0 rgba(42,240,196,0);transition:box-shadow .2s,transform .2s;
+  border:none;cursor:pointer;white-space:nowrap;
+}
+.cta-btn:hover{box-shadow:0 0 26px rgba(42,240,196,.55);transform:translateY(-1px)}
+.cta-ghost{
+  border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:999px;font-size:14px;font-weight:500;
+  background:transparent;transition:border-color .15s,color .15s;
+}
+.cta-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.menu-btn{display:none;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text);width:40px;height:40px;font-size:18px;cursor:pointer}
+.mobile-panel{display:none;flex-direction:column;gap:2px;padding:12px 24px 20px;border-top:1px solid var(--border);background:var(--bg2)}
+.mobile-panel a{padding:12px 4px;font-size:15px;color:var(--muted);border-bottom:1px solid var(--border)}
+.mobile-panel.on{display:flex}
+
+/* ---------- Hero ---------- */
+.hero{padding:96px 0 80px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--accent-dim);color:var(--accent);
+  border:1px solid rgba(42,240,196,.35);
+  font-size:12px;font-weight:700;letter-spacing:.08em;
+  padding:7px 14px;border-radius:999px;margin-bottom:22px;
+}
+h1{font-size:clamp(32px,4.6vw,52px);line-height:1.28;font-weight:900;letter-spacing:.01em;margin-bottom:20px}
+h1 .glow{color:var(--accent);text-shadow:0 0 30px rgba(42,240,196,.55)}
+.hero p.lead{font-size:16px;color:var(--muted);max-width:52ch;margin-bottom:32px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.stat-row{display:flex;gap:0;border-top:1px solid var(--border)}
+.stat{flex:1;padding:18px 18px 0;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-size:26px;font-family:'Rajdhani',sans-serif;color:var(--accent)}
+.stat span{font-size:12px;color:var(--muted)}
+
+.hero-visual{
+  position:relative;border-radius:var(--rl);overflow:hidden;
+  background:linear-gradient(160deg,var(--surface),var(--bg2));
+  border:1px solid var(--border);
+  aspect-ratio:4/5;
+  display:flex;align-items:center;justify-content:center;
+}
+.sign-mock{
+  width:82%;aspect-ratio:16/10;border-radius:10px;
+  background:#000;border:6px solid #1b2233;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 0 60px rgba(42,240,196,.25) inset, 0 0 40px rgba(42,240,196,.2);
+}
+.sign-mock .l1{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--accent);text-shadow:0 0 14px rgba(42,240,196,.9);letter-spacing:.04em}
+.sign-mock .l2{font-size:12px;color:var(--accent2);text-shadow:0 0 10px rgba(255,61,154,.8);letter-spacing:.12em}
+.sign-mock .pixels{display:flex;gap:4px;margin-top:6px}
+.sign-mock .px{width:6px;height:6px;border-radius:1px;background:var(--accent);opacity:.25;animation:px 1.6s infinite}
+.sign-mock .px:nth-child(2){animation-delay:.15s}
+.sign-mock .px:nth-child(3){animation-delay:.3s}
+.sign-mock .px:nth-child(4){animation-delay:.45s}
+.sign-mock .px:nth-child(5){animation-delay:.6s}
+@keyframes px{0%,100%{opacity:.2}50%{opacity:1}}
+.hero-visual .badge{
+  position:absolute;bottom:18px;left:18px;right:18px;
+  background:rgba(6,8,15,.75);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;font-size:12px;color:var(--muted);backdrop-filter:blur(6px);
+}
+
+/* ---------- Section shells ---------- */
+.section{padding:88px 0}
+.section-head{max-width:640px;margin:0 auto 48px;text-align:center}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+h2{font-size:clamp(24px,3vw,34px);font-weight:900;margin-bottom:14px}
+.section-head p{color:var(--muted);font-size:15px}
+.alt{background:linear-gradient(180deg,var(--bg2),var(--bg))}
+
+/* pain points */
+.pain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pain-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:26px 20px;text-align:center;transition:border-color .2s,transform .2s;
+}
+.pain-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.pain-card .ic{font-size:26px;margin-bottom:14px}
+.pain-card p{font-size:14px;color:var(--muted)}
+
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.svc-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);
+  padding:30px 26px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;
+}
+.svc-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.svc-card .num{position:absolute;top:18px;right:22px;font-family:'Rajdhani',sans-serif;font-size:44px;font-weight:700;color:var(--border)}
+.svc-card .ic{width:48px;height:48px;border-radius:12px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.svc-card h3{font-size:18px;font-weight:700;margin-bottom:10px}
+.svc-card p{font-size:14px;color:var(--muted);margin-bottom:16px}
+.svc-card ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.svc-card li{font-size:13px;color:var(--text);display:flex;gap:8px;align-items:flex-start}
+.svc-card li::before{content:'▸';color:var(--accent);flex-shrink:0}
+
+/* reasons */
+.reason-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.reason-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.reason-card .n{font-family:'Rajdhani',sans-serif;font-size:15px;color:var(--accent);font-weight:700;margin-bottom:8px}
+.reason-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.reason-card p{font-size:13.5px;color:var(--muted)}
+
+/* gallery */
+.gal-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:32px;flex-wrap:wrap}
+.gal-tab{padding:9px 18px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;cursor:pointer;transition:all .15s}
+.gal-tab.on{background:var(--accent);color:#04140f;border-color:var(--accent);font-weight:700}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.gal-item{display:none;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:var(--surface)}
+.gal-item.show{display:block}
+.gal-thumb{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);position:relative}
+.gal-thumb span.tag{position:absolute;top:10px;left:10px;background:rgba(6,8,15,.7);border:1px solid var(--border);font-size:11px;padding:4px 10px;border-radius:999px;color:var(--accent)}
+.gal-info{padding:14px 16px}
+.gal-info b{display:block;font-size:14px;margin-bottom:4px}
+.gal-info span{font-size:12.5px;color:var(--muted)}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.flow-step{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 16px;text-align:center;position:relative}
+.flow-step .n{width:34px;height:34px;border-radius:50%;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(42,240,196,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-weight:700;font-family:'Rajdhani',sans-serif}
+.flow-step h4{font-size:14px;font-weight:700;margin-bottom:6px}
+.flow-step p{font-size:12px;color:var(--muted)}
+.flow-arrow{display:none}
+
+/* pricing */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.price-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:30px 26px;display:flex;flex-direction:column}
+.price-card.rec{border-color:var(--accent);box-shadow:0 0 40px rgba(42,240,196,.15);position:relative}
+.price-card.rec::before{content:'おすすめ';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#04140f;font-size:11px;font-weight:700;padding:5px 14px;border-radius:999px}
+.price-card h3{font-size:15px;color:var(--muted);font-weight:500;margin-bottom:10px}
+.price-card .amt{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;margin-bottom:4px}
+.price-card .amt small{font-size:13px;color:var(--muted);font-family:'Noto Sans JP',sans-serif}
+.price-card .desc{font-size:12.5px;color:var(--muted);margin-bottom:20px}
+.price-card ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px;flex:1}
+.price-card li{font-size:13.5px;display:flex;gap:8px;align-items:flex-start}
+.price-card li::before{content:'✓';color:var(--accent);font-weight:700;flex-shrink:0}
+.price-note{text-align:center;font-size:12.5px;color:var(--muted);margin-top:24px}
+
+/* voices */
+.voice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.voice-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.voice-card .stars{color:var(--accent);font-size:13px;margin-bottom:12px;letter-spacing:2px}
+.voice-card p{font-size:13.5px;color:var(--text);margin-bottom:16px}
+.voice-card .who{font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:12px}
+
+/* faq */
+.faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.faq-q{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:14.5px;font-weight:700;gap:16px}
+.faq-q .x{color:var(--accent);font-size:18px;transition:transform .2s;flex-shrink:0}
+.faq-item.on .x{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.faq-a p{padding:0 20px 18px;font-size:13.5px;color:var(--muted)}
+.faq-item.on .faq-a{max-height:220px}
+
+/* contact */
+.contact-wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:32px}
+.contact-info{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:32px}
+.contact-info h3{font-size:18px;margin-bottom:16px}
+.contact-info .row{display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;font-size:13.5px}
+.contact-info .row .ic{color:var(--accent);font-size:16px;width:20px;flex-shrink:0}
+.contact-info .row b{display:block;font-size:12px;color:var(--muted);margin-bottom:2px;font-weight:500}
+.contact-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:32px}
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.fld input,.fld select,.fld textarea{
+  width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg2);color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;
+}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--accent)}
+.fld textarea{min-height:100px;resize:vertical}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.submit-btn{
+  width:100%;padding:15px;border-radius:12px;border:none;background:var(--accent);
+  color:#04140f;font-weight:700;font-size:15px;cursor:pointer;margin-top:6px;transition:box-shadow .2s;
+}
+.submit-btn:hover{box-shadow:0 0 30px rgba(42,240,196,.5)}
+.form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+
+/* CTA band */
+.cta-band{
+  margin:0 24px;border-radius:var(--rl);
+  background:linear-gradient(120deg,rgba(42,240,196,.14),rgba(255,61,154,.10));
+  border:1px solid var(--border);padding:56px 40px;text-align:center;
+}
+.cta-band h2{margin-bottom:12px}
+.cta-band p{color:var(--muted);margin-bottom:26px}
+
+footer{border-top:1px solid var(--border);padding:48px 0 24px;margin-top:40px}
+.foot-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:32px;margin-bottom:36px}
+.foot-brand p{font-size:13px;color:var(--muted);margin-top:12px;max-width:36ch}
+.foot-col h4{font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:14px;text-transform:uppercase}
+.foot-col a{display:block;font-size:13.5px;color:var(--text);margin-bottom:10px;opacity:.85}
+.foot-col a:hover{color:var(--accent)}
+.foot-bottom{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted)}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:960px){
+  .hero-grid{grid-template-columns:1fr}
+  .pain-grid{grid-template-columns:repeat(2,1fr)}
+  .svc-grid{grid-template-columns:1fr}
+  .reason-grid{grid-template-columns:repeat(2,1fr)}
+  .gal-grid{grid-template-columns:repeat(2,1fr)}
+  .flow{grid-template-columns:repeat(2,1fr)}
+  .price-grid{grid-template-columns:1fr}
+  .voice-grid{grid-template-columns:1fr}
+  .contact-wrap{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:720px){
+  nav.links,.cta-btn.desktop-only{display:none}
+  .menu-btn{display:block}
+  .stat-row{flex-wrap:wrap}
+  .stat{flex:1 1 50%;border-right:none;border-bottom:1px solid var(--border);padding-bottom:12px}
+  .pain-grid{grid-template-columns:1fr}
+  .reason-grid{grid-template-columns:1fr}
+  .gal-grid{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr}
+  .frow2{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .section{padding:64px 0}
+  .cta-band{padding:40px 22px}
+}
 </style>
 </head>
 <body>
 
-<header class="hdr">
-  <div class="logo">SOCIRA <span>SNS運用ツール</span></div>
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>LightVision<small>LED SIGN &amp; DIGITAL SIGNAGE</small></div>
+    </div>
+    <nav class="links">
+      <a href="#services">サービス</a>
+      <a href="#reasons">選ばれる理由</a>
+      <a href="#gallery">施工事例</a>
+      <a href="#flow">導入の流れ</a>
+      <a href="#pricing">料金</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a href="tel:0120-000-000" class="cta-ghost desktop-only" style="display:none">📞 0120-000-000</a>
+      <a href="#contact" class="cta-btn">無料相談する</a>
+      <button class="menu-btn" id="menuBtn">☰</button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="#services">サービス</a>
+    <a href="#reasons">選ばれる理由</a>
+    <a href="#gallery">施工事例</a>
+    <a href="#flow">導入の流れ</a>
+    <a href="#pricing">料金</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">お問い合わせ</a>
+  </div>
 </header>
 
-<div class="wrap">
-  <div class="tabs">
-    <button class="tab on" onclick="sw('brief')">📋 制作指示書</button>
-    <button class="tab" onclick="sw('analysis')">📊 分析・改善</button>
-    <button class="tab" onclick="sw('review')">✅ 添削</button>
-  </div>
-
-  <!-- 制作指示書 -->
-  <div id="p-brief" class="panel on">
-    <div class="card">
-      <div class="ctit">基本情報</div>
-      <div class="fld"><label>HP URL</label><input type="url" id="b-hp" placeholder="https://example.com" inputmode="url"></div>
-      <div class="fld">
-        <label>インスタ URL</label>
-        <input type="url" id="b-insta" placeholder="https://www.instagram.com/〇〇/" inputmode="url">
-        <div class="hint">入力すると投稿済みテーマを分析して被らない切り口を優先提案します</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">● 企画〜施工〜保守までワンストップ</div>
+      <h1>夜でも、雨でも、<br><span class="glow">目立つ看板</span>を。</h1>
+      <p class="lead">LED看板・デジタルサイネージの企画・デザイン・製作・施工・保守までを自社一貫体制で対応。紙のポスターや古い電飾看板を、今すぐ変えられる「攻める看板」に。</p>
+      <div class="hero-cta">
+        <a href="#contact" class="cta-btn">📩 無料で相談する</a>
+        <a href="#gallery" class="cta-ghost">施工事例を見る</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><b>1,200+</b><span>施工実績</span></div>
+        <div class="stat"><b>18年</b><span>業界歴</span></div>
+        <div class="stat"><b>24h</b><span>故障対応</span></div>
+        <div class="stat"><b>97%</b><span>継続率</span></div>
       </div>
     </div>
-
-    <div class="card">
-      <div class="ctit">業種</div>
-      <div class="tags" id="b-genre">
-        <span class="tag" data-v="飲食店">飲食店</span>
-        <span class="tag" data-v="カフェ">カフェ</span>
-        <span class="tag" data-v="美容サロン">美容サロン</span>
-        <span class="tag" data-v="エステ">エステ</span>
-        <span class="tag" data-v="整体・治療院">整体・治療院</span>
-        <span class="tag" data-v="防犯カメラ">防犯カメラ</span>
-        <span class="tag" data-v="ガールズバー">ガールズバー</span>
-        <span class="tag" data-v="小売店">小売店</span>
-        <span class="tag" data-v="不動産">不動産</span>
-        <span class="tag" data-v="士業">士業</span>
-        <span class="tag" data-v="建設・工務店">建設・工務店</span>
-        <span class="tag" data-v="美容クリニック">美容クリニック</span>
-        <span class="tag" data-v="歯科医院">歯科医院</span>
-        <span class="tag" data-v="学習塾">学習塾</span>
-        <span class="tag" data-v="保育園・幼稚園">保育園・幼稚園</span>
-        <span class="tag" data-v="ジム・フィットネス">ジム・フィットネス</span>
-        <span class="tag" data-v="EC・通販">EC・通販</span>
-      </div>
-      <div class="custom-row">
-        <input type="text" id="b-genre-i" placeholder="業種を手入力して追加">
-        <button onclick="addTag('b-genre','b-genre-i',S.bG)">＋ 追加</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="ctit">集客ゴール</div>
-      <div class="tags" id="b-goal">
-        <span class="tag" data-v="来店促進">来店促進</span>
-        <span class="tag" data-v="予約獲得">予約獲得</span>
-        <span class="tag" data-v="ブランド認知">ブランド認知</span>
-        <span class="tag" data-v="フォロワー増加">フォロワー増加</span>
-        <span class="tag" data-v="商品購入">商品購入</span>
-        <span class="tag" data-v="問い合わせ獲得">問い合わせ獲得</span>
-        <span class="tag" data-v="求人・採用">求人・採用</span>
-      </div>
-      <div class="custom-row">
-        <input type="text" id="b-goal-i" placeholder="ゴールを手入力して追加">
-        <button onclick="addTag('b-goal','b-goal-i',S.bGo)">＋ 追加</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="ctit">ターゲット</div>
-      <div class="tags" id="b-target">
-        <span class="tag" data-v="小学生">小学生</span>
-        <span class="tag" data-v="中高生">中高生</span>
-        <span class="tag" data-v="10〜20代女性">10〜20代女性</span>
-        <span class="tag" data-v="30〜40代女性">30〜40代女性</span>
-        <span class="tag" data-v="20〜30代男性">20〜30代男性</span>
-        <span class="tag" data-v="40〜50代男性">40〜50代男性</span>
-        <span class="tag" data-v="ファミリー">ファミリー</span>
-        <span class="tag" data-v="子育て世代">子育て世代</span>
-        <span class="tag" data-v="シニア">シニア</span>
-        <span class="tag" data-v="ビジネスパーソン">ビジネスパーソン</span>
-      </div>
-      <div class="custom-row">
-        <input type="text" id="b-target-i" placeholder="ターゲットを手入力して追加">
-        <button onclick="addTag('b-target','b-target-i',S.bT)">＋ 追加</button>
-      </div>
-    </div>
-
-    <button class="btn" onclick="genBrief()">3枚分の制作指示書＋絵コンテを生成する →</button>
-    <p class="note">ボタンを押すとプロンプトがコピーされます<br>Claude.aiのチャットに貼り付けてください</p>
-  </div>
-
-  <!-- 分析・改善 -->
-  <div id="p-analysis" class="panel">
-    <div class="card">
-      <div class="ctit">アカウント情報</div>
-      <div class="fld"><label>インスタ URL</label><input type="url" id="a-insta" placeholder="https://www.instagram.com/〇〇/"></div>
-      <div class="fld"><label>投稿テーマ（3枚の内容）</label><input type="text" id="a-theme" placeholder="例：感情訴求・価格訴求・世界観の3枚セット"></div>
-    </div>
-    <div class="card">
-      <div class="ctit">3枚投稿した結果データ（わからない欄は空欄でOK）</div>
-      <div class="mg">
-        <div class="fld"><label>リーチ数（合計）</label><input type="number" id="a-reach" placeholder="例：3600" inputmode="numeric"></div>
-        <div class="fld"><label>インプレッション（合計）</label><input type="number" id="a-imp" placeholder="例：5400" inputmode="numeric"></div>
-        <div class="fld"><label>いいね数（合計）</label><input type="number" id="a-like" placeholder="例：135" inputmode="numeric"></div>
-        <div class="fld"><label>保存数（合計）</label><input type="number" id="a-save" placeholder="例：36" inputmode="numeric"></div>
-        <div class="fld"><label>コメント数（合計）</label><input type="number" id="a-comment" placeholder="例：9" inputmode="numeric"></div>
-        <div class="fld"><label>プロフタップ数（合計）</label><input type="number" id="a-profile" placeholder="例：24" inputmode="numeric"></div>
-        <div class="fld"><label>フォロワー数</label><input type="number" id="a-followers" placeholder="例：398" inputmode="numeric"></div>
-      </div>
-      <div class="fld"><label>3枚の中で一番反応が良かった投稿（任意）</label><input type="text" id="a-best" placeholder="例：1枚目の感情訴求が保存多かった"></div>
-      <div class="fld"><label>気づいたこと（任意）</label><textarea id="a-note" placeholder="例：3枚目だけコメントが来た、全体的に保存が多かったなど"></textarea></div>
-    </div>
-    <button class="btn" onclick="genAnalysis()">3枚セットの分析・改善提案を出す →</button>
-    <p class="note">ボタンを押すとプロンプトがコピーされます<br>Claude.aiのチャットに貼り付けてください</p>
-  </div>
-
-  <!-- 添削 -->
-  <div id="p-review" class="panel">
-    <div class="card">
-      <div class="ctit">添削の手順</div>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text">制作指示書で生成した<b>「添削用サマリー」</b>を下の欄に貼り付ける</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text">「添削プロンプトをコピー」ボタンを押す</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text"><b>Claude.aiのチャット</b>を開いて<b>画像3枚を貼り付け</b>→コピーしたプロンプトを貼り付けて送信</div>
+    <div class="hero-visual reveal">
+      <div class="sign-mock">
+        <div class="l1">NOW OPEN</div>
+        <div class="l2">FRESH ROAST COFFEE</div>
+        <div class="pixels">
+          <span class="px"></span><span class="px"></span><span class="px"></span><span class="px"></span><span class="px"></span>
         </div>
       </div>
+      <div class="badge">💡 遠隔操作でコンテンツを即時更新。セールもメニューも数分で切り替え可能です。</div>
     </div>
-
-    <div class="card">
-      <div class="ctit">制作指示書のサマリー（必須）</div>
-      <div class="fld">
-        <textarea id="r-summary" placeholder="指示書生成後に出てくる「---添削用サマリーここから---」の内容をここに貼り付けてください" style="min-height:130px"></textarea>
-        <div class="hint">⚠️ これを貼り付けないと指示書と添削が連動しません</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="ctit">集客ゴール</div>
-      <div class="tags" id="r-goal">
-        <span class="tag" data-v="来店促進">来店促進</span>
-        <span class="tag" data-v="予約獲得">予約獲得</span>
-        <span class="tag" data-v="ブランド認知">ブランド認知</span>
-        <span class="tag" data-v="フォロワー増加">フォロワー増加</span>
-        <span class="tag" data-v="問い合わせ獲得">問い合わせ獲得</span>
-        <span class="tag" data-v="求人・採用">求人・採用</span>
-      </div>
-      <div class="fld" style="margin-top:14px"><label>制作者からひとこと（任意）</label><textarea id="r-note" placeholder="「1枚目のレイアウトが不安」「3枚のトーンが揃ってるか確認してほしい」など"></textarea></div>
-    </div>
-
-    <button class="btn" onclick="genReview()">添削プロンプトをコピー →</button>
-    <p class="note">コピー後にClaude.aiで画像3枚と一緒に送信してください</p>
   </div>
-</div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="section alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Are you facing…</div>
+      <h2>こんなお悩みありませんか？</h2>
+      <p>看板・サイネージに関するよくあるお悩みを、私たちが解決します。</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card reveal"><div class="ic">🌙</div><p>夜になると看板が見えず、通行客に気づいてもらえない</p></div>
+      <div class="pain-card reveal"><div class="ic">🖨️</div><p>メニューやセール情報を変えるたびに印刷し直すのが大変</p></div>
+      <div class="pain-card reveal"><div class="ic">🛠️</div><p>看板が古くなって錆びたり文字が読めなくなっている</p></div>
+      <div class="pain-card reveal"><div class="ic">💸</div><p>複数の業者に見積もりを取るのが面倒で相場も分からない</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Services</div>
+      <h2>サービス内容</h2>
+      <p>屋外・屋内問わず、目的に合わせた最適な看板・サイネージをご提案します。</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card reveal">
+        <div class="num">01</div>
+        <div class="ic">💡</div>
+        <h3>LED看板</h3>
+        <p>チャンネル文字・電飾看板・袖看板・野立て看板など、屋外広告の企画から製作・施工まで対応。</p>
+        <ul>
+          <li>低消費電力・長寿命のLED素子を使用</li>
+          <li>耐候・耐風設計で全国どこでも施工可能</li>
+          <li>3D CGで完成イメージを事前確認</li>
+        </ul>
+      </div>
+      <div class="svc-card reveal">
+        <div class="num">02</div>
+        <div class="ic">🖥️</div>
+        <h3>デジタルサイネージ</h3>
+        <p>屋外・屋内ディスプレイの設置とコンテンツ配信システムを一括提供。遠隔から即時更新できます。</p>
+        <ul>
+          <li>クラウド配信でスマホから編集・更新</li>
+          <li>複数店舗の一括コンテンツ管理に対応</li>
+          <li>高輝度パネルで直射日光下も視認性確保</li>
+        </ul>
+      </div>
+      <div class="svc-card reveal">
+        <div class="num">03</div>
+        <div class="ic">🔧</div>
+        <h3>保守・メンテナンス</h3>
+        <p>設置後も安心の定期点検と24時間駆けつけ対応で、看板トラブルによる機会損失を防ぎます。</p>
+        <ul>
+          <li>年1〜2回の定期点検プラン</li>
+          <li>故障時は24時間以内に一次対応</li>
+          <li>コンテンツ更新の代行サポートも可能</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REASONS -->
+<section class="section alt" id="reasons">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Why us</div>
+      <h2>選ばれる6つの理由</h2>
+      <p>企画から施工・保守まで自社一貫だからこそできる、品質とコストの両立。</p>
+    </div>
+    <div class="reason-grid">
+      <div class="reason-card reveal"><div class="n">01</div><h3>自社施工でコスト削減</h3><p>下請けを挟まない自社施工体制により、中間マージンを抑えた適正価格を実現します。</p></div>
+      <div class="reason-card reveal"><div class="n">02</div><h3>全国どこでも対応</h3><p>現地調査から施工・アフターサポートまで、全国の店舗・施設に対応しています。</p></div>
+      <div class="reason-card reveal"><div class="n">03</div><h3>3D CGで事前確認</h3><p>設置後のイメージを完成前に3D CGで確認できるので、「思っていたのと違う」を防げます。</p></div>
+      <div class="reason-card reveal"><div class="n">04</div><h3>遠隔コンテンツ更新</h3><p>サイネージのコンテンツはスマホ・PCから遠隔更新。印刷コストと手間を削減します。</p></div>
+      <div class="reason-card reveal"><div class="n">05</div><h3>省電力・長寿命設計</h3><p>高効率LED素子の採用で電気代を抑えつつ、長期間安定した明るさを維持します。</p></div>
+      <div class="reason-card reveal"><div class="n">06</div><h3>施工実績1,200件超</h3><p>飲食・小売・医療・不動産など幅広い業種での施工実績とノウハウがあります。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="section" id="gallery">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Works</div>
+      <h2>施工事例</h2>
+      <p>業種別の施工事例をご紹介します（写真はイメージです）。</p>
+    </div>
+    <div class="gal-tabs">
+      <button class="gal-tab on" data-c="all">すべて</button>
+      <button class="gal-tab" data-c="food">飲食店</button>
+      <button class="gal-tab" data-c="retail">小売・EC</button>
+      <button class="gal-tab" data-c="office">医療・オフィス</button>
+    </div>
+    <div class="gal-grid" id="galGrid">
+      <div class="gal-item show reveal" data-c="food">
+        <div class="gal-thumb" style="background:linear-gradient(135deg,#132018,#0b0f1c)"><span class="tag">飲食店</span>🍜</div>
+        <div class="gal-info"><b>ラーメン店 袖看板LED化</b><span>視認性向上により夜間来店が約1.4倍に</span></div>
+      </div>
+      <div class="gal-item show reveal" data-c="retail">
+        <div class="gal-thumb" style="background:linear-gradient(135deg,#1a1330,#0b0f1c)"><span class="tag">小売・EC</span>🛍️</div>
+        <div class="gal-info"><b>アパレル店 店頭サイネージ</b><span>セール情報を即時更新し衝動来店を促進</span></div>
+      </div>
+      <div class="gal-item show reveal" data-c="office">
+        <div class="gal-thumb" style="background:linear-gradient(135deg,#0d2330,#0b0f1c)"><span class="tag">医療・オフィス</span>🏥</div>
+        <div class="gal-info"><b>クリニック 受付案内サイネージ</b><span>案内表示のデジタル化でスタッフ負担を軽減</span></div>
+      </div>
+      <div class="gal-item show reveal" data-c="food">
+        <div class="gal-thumb" style="background:linear-gradient(135deg,#132018,#0b0f1c)"><span class="tag">飲食店</span>☕</div>
+        <div class="gal-info"><b>カフェ チャンネル文字看板</b><span>ブランドロゴを立体LED文字で再現</span></div>
+      </div>
+      <div class="gal-item show reveal" data-c="retail">
+        <div class="gal-thumb" style="background:linear-gradient(135deg,#1a1330,#0b0f1c)"><span class="tag">小売・EC</span>📦</div>
+        <div class="gal-info"><b>物流拠点 屋外野立て看板</b><span>幹線道路からの視認性を大幅改善</span></div>
+      </div>
+      <div class="gal-item show reveal" data-c="office">
+        <div class="gal-thumb" style="background:linear-gradient(135deg,#0d2330,#0b0f1c)"><span class="tag">医療・オフィス</span>🏢</div>
+        <div class="gal-info"><b>オフィスビル エントランスサイネージ</b><span>テナント案内をマルチ言語対応で表示</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="section alt" id="flow">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Flow</div>
+      <h2>導入の流れ</h2>
+      <p>お問い合わせから設置完了まで、最短2〜3週間でご案内します。</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step reveal"><div class="n">1</div><h4>お問い合わせ</h4><p>フォーム・電話で概要をヒアリング</p></div>
+      <div class="flow-step reveal"><div class="n">2</div><h4>現地調査</h4><p>設置場所・視認性を専門スタッフが確認</p></div>
+      <div class="flow-step reveal"><div class="n">3</div><h4>デザイン提案</h4><p>3D CGで完成イメージとお見積りを提示</p></div>
+      <div class="flow-step reveal"><div class="n">4</div><h4>製作・施工</h4><p>自社工場で製作し、施工まで一貫対応</p></div>
+      <div class="flow-step reveal"><div class="n">5</div><h4>アフターサポート</h4><p>定期点検・24時間の故障対応で運用を支援</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Pricing</div>
+      <h2>料金プラン</h2>
+      <p>規模・目的に応じて最適なプランをご提案します。詳細はお見積りにて。</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <h3>ライトプラン</h3>
+        <div class="amt">15万円<small>〜（税別）</small></div>
+        <div class="desc">小型LED看板・チャンネル文字1点の設置に</div>
+        <ul>
+          <li>現地調査・デザイン提案</li>
+          <li>小型LED看板 or 電飾文字1式</li>
+          <li>施工・電気工事込み</li>
+          <li>初年度保証付き</li>
+        </ul>
+        <a href="#contact" class="cta-ghost" style="text-align:center">見積を依頼</a>
+      </div>
+      <div class="price-card rec reveal">
+        <h3>スタンダードプラン</h3>
+        <div class="amt">45万円<small>〜（税別）</small></div>
+        <div class="desc">屋外デジタルサイネージ1台導入に最適</div>
+        <ul>
+          <li>屋外対応サイネージディスプレイ1台</li>
+          <li>クラウド配信システム利用権</li>
+          <li>初期コンテンツデザイン3点</li>
+          <li>年1回の定期点検付き</li>
+        </ul>
+        <a href="#contact" class="cta-btn" style="text-align:center;justify-content:center">見積を依頼</a>
+      </div>
+      <div class="price-card reveal">
+        <h3>プレミアムプラン</h3>
+        <div class="amt">要相談</div>
+        <div class="desc">複数店舗・大型看板・多面サイネージなど</div>
+        <ul>
+          <li>複数拠点の一括導入・管理</li>
+          <li>大型LED看板／複数面サイネージ</li>
+          <li>専任担当による運用サポート</li>
+          <li>24時間保守・優先対応</li>
+        </ul>
+        <a href="#contact" class="cta-ghost" style="text-align:center">見積を依頼</a>
+      </div>
+    </div>
+    <p class="price-note">※価格は設置環境・サイズ・機能により変動します。まずは無料現地調査でお見積りいたします。</p>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="section alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Voices</div>
+      <h2>お客様の声</h2>
+    </div>
+    <div class="voice-grid">
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>「夜の視認性が全く違います。設置後、来店客数が明らかに増えました。デザイン提案も丁寧でした。」</p>
+        <div class="who">飲食店オーナー様</div>
+      </div>
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>「セール情報をスマホから即座に変更できるのが便利。印刷コストがなくなり運用が楽になりました。」</p>
+        <div class="who">アパレルショップ店長様</div>
+      </div>
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>「複数店舗の看板を一括管理できるので本部の負担が大幅に減りました。保守対応も安心です。」</p>
+        <div class="who">チェーン店 本部ご担当者様</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">FAQ</div>
+      <h2>よくあるご質問</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <div class="faq-q">Q. 施工までどのくらい時間がかかりますか？<span class="x">＋</span></div>
+        <div class="faq-a"><p>内容により異なりますが、お問い合わせから設置完了まで最短2〜3週間が目安です。大型案件は別途スケジュールをご案内します。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Q. 賃貸物件でも設置できますか？<span class="x">＋</span></div>
+        <div class="faq-a"><p>可能です。設置には建物所有者・管理会社の許可が必要な場合がありますので、事前確認をサポートいたします。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Q. サイネージのコンテンツ作成もお願いできますか？<span class="x">＋</span></div>
+        <div class="faq-a"><p>はい。デザイン制作から配信設定まで代行可能です。もちろん貴社で作成した素材をそのまま配信することもできます。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Q. 故障した場合の対応は？<span class="x">＋</span></div>
+        <div class="faq-a"><p>保守プランにご加入の場合、24時間以内に一次対応いたします。プラン外でも別途スポット対応が可能です。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Q. 補助金は利用できますか？<span class="x">＋</span></div>
+        <div class="faq-a"><p>自治体や国の補助金・助成金が利用できる場合があります。対象となるか含めてお気軽にご相談ください。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section style="padding:0 0 88px">
+  <div class="cta-band reveal">
+    <h2>まずは無料相談から。</h2>
+    <p>現地調査・お見積りは無料です。看板の悩み、お気軽にご相談ください。</p>
+    <a href="#contact" class="cta-btn">📩 無料相談を申し込む</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section alt" id="contact">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Contact</div>
+      <h2>お問い合わせ</h2>
+      <p>ご質問・お見積りのご依頼はお気軽にどうぞ。1営業日以内にご返信いたします。</p>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-info reveal">
+        <h3>お電話・メールでのお問い合わせ</h3>
+        <div class="row"><span class="ic">📞</span><div><b>電話番号（平日 9:00-18:00）</b>0120-000-000</div></div>
+        <div class="row"><span class="ic">✉️</span><div><b>メールアドレス</b>info@lightvision-sample.jp</div></div>
+        <div class="row"><span class="ic">📍</span><div><b>所在地</b>〒000-0000 東京都千代田区〇〇1-2-3</div></div>
+        <div class="row"><span class="ic">🕐</span><div><b>営業時間</b>平日 9:00〜18:00（土日祝休み）</div></div>
+        <div class="row"><span class="ic">🚨</span><div><b>保守契約者様専用</b>24時間故障受付ダイヤルあり</div></div>
+      </div>
+      <form class="contact-form reveal" id="contactForm">
+        <div class="frow2">
+          <div class="fld"><label>会社名・店舗名</label><input type="text" placeholder="株式会社〇〇" required></div>
+          <div class="fld"><label>ご担当者名</label><input type="text" placeholder="山田 太郎" required></div>
+        </div>
+        <div class="frow2">
+          <div class="fld"><label>電話番号</label><input type="tel" placeholder="090-0000-0000"></div>
+          <div class="fld"><label>メールアドレス</label><input type="email" placeholder="you@example.com" required></div>
+        </div>
+        <div class="fld">
+          <label>ご相談内容</label>
+          <select>
+            <option>LED看板について相談したい</option>
+            <option>デジタルサイネージについて相談したい</option>
+            <option>既存看板の修理・保守について</option>
+            <option>その他</option>
+          </select>
+        </div>
+        <div class="fld"><label>お問い合わせ詳細</label><textarea placeholder="設置場所・サイズ・ご予算など、わかる範囲でご記入ください"></textarea></div>
+        <button type="submit" class="submit-btn">この内容で送信する →</button>
+        <p class="form-note">送信するとメールアプリが起動します。1営業日以内に担当者よりご連絡いたします。</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand"><span class="dot"></span><div>LightVision<small>LED SIGN &amp; DIGITAL SIGNAGE</small></div></div>
+        <p>LED看板・デジタルサイネージの企画・製作・施工・保守までワンストップで対応。全国の店舗・施設の「見える化」を支援します。</p>
+      </div>
+      <div class="foot-col">
+        <h4>サービス</h4>
+        <a href="#services">LED看板</a>
+        <a href="#services">デジタルサイネージ</a>
+        <a href="#services">保守・メンテナンス</a>
+      </div>
+      <div class="foot-col">
+        <h4>会社情報</h4>
+        <a href="#reasons">選ばれる理由</a>
+        <a href="#gallery">施工事例</a>
+        <a href="#faq">よくある質問</a>
+      </div>
+      <div class="foot-col">
+        <h4>お問い合わせ</h4>
+        <a href="tel:0120-000-000">0120-000-000</a>
+        <a href="mailto:info@lightvision-sample.jp">info@lightvision-sample.jp</a>
+        <a href="#contact">お問い合わせフォーム</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 LightVision Inc. All rights reserved.</span>
+      <span>本サイトはサンプルです。掲載の会社名・実績・数値は例示です。</span>
+    </div>
+  </div>
+</footer>
 
 <script>
-const S={bG:[],bGo:[],bT:[],rGo:[]};
+// mobile menu
+const menuBtn=document.getElementById('menuBtn');
+const mobilePanel=document.getElementById('mobilePanel');
+menuBtn.addEventListener('click',()=>mobilePanel.classList.toggle('on'));
+mobilePanel.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobilePanel.classList.remove('on')));
 
-function sw(n){
-  const ns=['brief','analysis','review'];
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',ns[i]===n));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  document.getElementById('p-'+n).classList.add('on');
-}
-
-function itags(id,arr,single){
-  document.querySelectorAll(`#${id} .tag`).forEach(t=>t.onclick=()=>{
-    if(single){document.querySelectorAll(`#${id} .tag`).forEach(x=>x.classList.remove('on'));arr.length=0;}
-    const i=arr.indexOf(t.dataset.v);
-    if(i>-1){arr.splice(i,1);t.classList.remove('on');}
-    else{arr.push(t.dataset.v);t.classList.add('on');}
+// gallery filter
+document.querySelectorAll('.gal-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.gal-tab').forEach(t=>t.classList.remove('on'));
+    tab.classList.add('on');
+    const c=tab.dataset.c;
+    document.querySelectorAll('.gal-item').forEach(item=>{
+      item.classList.toggle('show', c==='all' || item.dataset.c===c);
+    });
   });
-}
-itags('b-genre',S.bG);itags('b-goal',S.bGo);itags('b-target',S.bT);
-itags('r-goal',S.rGo);
+});
 
-function addTag(cId,iId,arr){
-  const inp=document.getElementById(iId);
-  const val=inp.value.trim();
-  if(!val||arr.includes(val)){inp.value='';return;}
-  const t=document.createElement('span');
-  t.className='tag on';t.dataset.v=val;t.textContent=val;
-  t.onclick=()=>{
-    const i=arr.indexOf(val);
-    if(i>-1){arr.splice(i,1);t.classList.remove('on');}
-    else{arr.push(val);t.classList.add('on');}
-  };
-  arr.push(val);
-  document.getElementById(cId).appendChild(t);
-  inp.value='';
-}
-
-const v=id=>document.getElementById(id)?.value?.trim()||'';
-
-function copyText(text){
-  navigator.clipboard.writeText(text).then(()=>{
-    alert('コピーしました！\nClaude.aiのチャットに貼り付けてください。');
-  }).catch(()=>{
-    prompt('以下をコピーしてClaude.aiに貼り付けてください：',text);
+// faq accordion
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>{
+    const wasOn=item.classList.contains('on');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('on'));
+    if(!wasOn) item.classList.add('on');
   });
-}
+});
 
-function genBrief(){
-  const hp=v('b-hp'),insta=v('b-insta');
-  if(!hp&&!insta){alert('HPまたはインスタのURLを入力してください');return;}
-  const genre=S.bG.join('・')||'未選択',goal=S.bGo.join('・')||'未選択',target=S.bT.join('・')||'未選択';
-  copyText(`【3枚セット制作指示書＋絵コンテ 生成リクエスト】
-HP URL: ${hp||'なし'}
-インスタ URL: ${insta||'なし'}
-業種: ${genre} / 集客ゴール: ${goal} / ターゲット: ${target}
-フォーマット: 縦長4:5（インスタフィード）
-※インスタは常に1投稿3枚セットで制作します
+// contact form -> mailto
+document.getElementById('contactForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const inputs=e.target.querySelectorAll('input,select,textarea');
+  const [company,name,tel,email,type,detail]=inputs;
+  const body=`会社名・店舗名: ${company.value}\nご担当者名: ${name.value}\n電話番号: ${tel.value}\nメールアドレス: ${email.value}\nご相談内容: ${type.value}\n詳細:\n${detail.value}`;
+  window.location.href=`mailto:info@lightvision-sample.jp?subject=${encodeURIComponent('【HPより】お問い合わせ: '+company.value)}&body=${encodeURIComponent(body)}`;
+});
 
-インスタURLがある場合は投稿済みテーマを分析し被らない切り口を選んでください。
-Gary Vaynerchuk・Eugene Schwartzの思想をベースに、3枚セットで統一感を持たせながら各枚が独立してバズれる設計にしてください。
-
-【3枚の役割設計】
-1枚目：スクロールを止める「感情訴求」→ 見た人が「わかる」「自分ごと」と感じる
-2枚目：信頼を作る「証拠・実績訴求」→ 「本当に効果あるの？」という疑念を解消
-3枚目：背中を押す「行動訴求」→ 「今すぐ問い合わせ・来店」に誘導
-
-各枚に必ず含めること：
-① なぜこれがバズるか（人間の感情・欲求・心理から説明。スタッフのマーケ力が上がる内容）
-② 絵コンテSVG（縦長4:5・色・構図・テキスト配置まで再現）
-③ テキスト案（キャッチ15文字以内・サブ・CTA）
-④ デザイン指定（色コード・フォント・レイアウト・余白）
-⑤ キャプション（そのまま投稿できる日本語・ハッシュタグ付き）
-⑥ 期待効果（心理的根拠含む）
-
-最後に以下を必ず入れること：
-【3枚セットの統一ルール】色・フォント・トーンの統一指示
-【制作スタッフへの今日の学び】今回使ったマーケ手法を1つ噛み砕いて解説
-
-【添削用サマリー】※必ず以下のフォーマットで出力してください。スタッフがこれをコピーして添削時に使います。
----添削用サマリーここから---
-集客ゴール：${goal}
-ターゲット：${target}
-業種：${genre}
-
-1枚目：[テーマ名] / バズる理由：[1〜2文で]
-2枚目：[テーマ名] / バズる理由：[1〜2文で]
-3枚目：[テーマ名] / バズる理由：[1〜2文で]
-
-3枚セットの狙い：[全体の導線・意図を1〜2文で]
----添削用サマリーここまで---`);
-}
-
-function genAnalysis(){
-  copyText(`【3枚セット投稿 分析・改善提案 リクエスト】
-アカウント: ${v('a-insta')||'未入力'}
-3枚の内容: ${v('a-theme')||'未入力'}
-
-【投稿データ（3枚合計）】
-リーチ: ${v('a-reach')||'不明'} / インプレッション: ${v('a-imp')||'不明'}
-いいね: ${v('a-like')||'不明'} / 保存: ${v('a-save')||'不明'} / コメント: ${v('a-comment')||'不明'}
-プロフタップ: ${v('a-profile')||'不明'} / フォロワー: ${v('a-followers')||'不明'}
-一番反応が良かった投稿: ${v('a-best')||'不明'}
-気づいたこと: ${v('a-note')||'なし'}
-
-世界トップSNSマーケッター視点で3枚セットとして分析・改善提案をしてください。
-
-出力：
-① 総合評価（S/A/B/C/D）＋一言
-② 数値の読み方（スタッフが理解できる言葉で）
-③ 3枚の中で何が効いて何が効かなかったか
-④ 改善点（優先順位順・具体的な修正方法）
-⑤ 次の3枚セットで必ずやること（3つだけ）
-⑥ 今日のマーケ学び（3枚セット投稿の法則）`);
-}
-
-function genReview(){
-  const goal=S.rGo.join('・')||'未選択';
-  const summary=v('r-summary');
-  if(!summary){alert('制作指示書のサマリーを貼り付けてください');return;}
-  copyText(`【3枚セット制作物 添削リクエスト】
-集客ゴール: ${goal}
-制作者コメント: ${v('r-note')||'なし'}
-
-【制作指示書のサマリー（この内容を踏まえて添削してください）】
-${summary}
-
-添付した画像3枚を3枚セットとして世界トップマーケッター視点で添削してください。
-
-出力：
-① 3枚セット総合点（100点満点）＋一言評価
-② バズる可能性（高・中・低）＋理由
-③ 3枚の統一感・流れの評価（スクロールしたときの導線）
-④ 各枚の良かった点（1枚目・2枚目・3枚目それぞれ）
-⑤ 各枚の改善点（「ここをこう直して」レベルの具体的指示）
-⑥ 修正後のキャッチコピー案（3枚分）
-⑦ スタッフへの今日の学び
-
-【重要】総合点が90点以上だった場合は、以下のフォーマットでLINE送付用メッセージを必ず追加出力してください：
-
----
-✅ 90点以上！以下をそのままLINEにコピーして梅田さん・お客様に送ってください。
-
-【投稿のご提案】
-
-今回の3枚投稿はお客様の集客に向けて以下の意図で制作しました。
-
-▼1枚目
-（1枚目のテーマ・バズる理由・ターゲットの心理を2〜3文で自然な日本語で）
-
-▼2枚目
-（2枚目のテーマ・バズる理由・ターゲットの心理を2〜3文で自然な日本語で）
-
-▼3枚目
-（3枚目のテーマ・バズる理由・ターゲットの心理を2〜3文で自然な日本語で）
-
-この3枚を投稿することで（期待できる集客効果を1〜2文で）。
-ご確認のほどよろしくお願いいたします。
----`);
-}
+// reveal on scroll
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
